@@ -1,0 +1,13 @@
+﻿[
+	{
+		"name": "Foo Widget",
+		"position": { "x": 10, "y": 20 },
+		"variant": 100
+	},
+	{
+		"name": "Bar Widget",
+		"position": { "x": 100, "y": 55 },
+		"buffer": [ 50, 60, 70, 80, 90, 100, 110, 120 ],
+		"variant": "Hello world"
+	}
+]
