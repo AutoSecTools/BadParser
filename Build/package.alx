@@ -1,0 +1,22 @@
+﻿#'..\\..\\Aphid\\Build\\package.base';
+
+f = @() string.Format('BadParser\\bin\\{{config}}\\{0}', $_);
+f2 = @() $args->f;
+
+package({
+    name: 'BadParser',
+    config: 'Debug',
+    root: '..',
+    mainModule: f('BadParser.exe'),
+    files: f2(
+        'BadParser.pdb',
+        'README.md',
+        'test.json',
+        'test_0xdead0001.json',
+        'test_0xdead0002.json',
+        'test_0xdead0003.json',
+        'test_0xdead0004.json',
+        'test_0xdead0005.json',
+        'test_0xdead0006.json',
+        'test_0xdead0007.json')
+});

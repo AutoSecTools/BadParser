@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BadParser", "BadParser\BadParser.csproj", "{97A18BC7-11F9-4C0A-9651-DB539EE08226}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B71C9D12-B4D9-4F71-8599-22BD2AA859C6}"
+	ProjectSection(SolutionItems) = preProject
+		Build\package.alx = Build\package.alx
+		Build\package.cmd = Build\package.cmd
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
