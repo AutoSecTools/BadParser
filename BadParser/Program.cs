@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -12,9 +13,13 @@ namespace BadParser
     {
         static void Main(string[] args)
         {
+            Console.WriteLine(
+                "Bad Parser {0}",
+                Assembly.GetExecutingAssembly().GetName().Version);
+
             if (args.Length != 1)
             {
-                Console.WriteLine("BadParser [Input file]");
+                Console.WriteLine("\r\nUsage: BadParser [Input file]");
                 Environment.Exit(1);
             }
 
