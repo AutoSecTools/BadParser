@@ -1,0 +1,20 @@
+﻿load System.Web.Extensions;
+using System.Web.Script.Serialization;
+
+createWidget = @{
+    w = new Widget();
+    w.Name = 'Test Widget';
+    w.Position = new WidgetVector();
+    w.Position.X = 52;
+    w.Position.Y = 30;
+    w.Buffer = 0x10 |> createBuffer;
+    w.Variant = 'hello, world';
+
+    ret w;
+};
+
+_widgetType = macro(@{ (new Widget()).GetType().MakeArrayType()});
+
+readWidget = {
+    json: @() (new JavaScriptSerializer()).Deserialize($_ |> File.ReadAllText, _widgetType())
+}

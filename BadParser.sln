@@ -9,7 +9,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{B71C9D12
 		Build\package.cmd = Build\package.cmd
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Components.Aphid", "..\Aphid\Components.Aphid\Components.Aphid.csproj", "{4249DB75-BBB6-4CC4-B046-3170DD1D3BC1}"
+EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 1
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://autosectools.visualstudio.com/defaultcollection
+		SccProjectUniqueName0 = ..\\Aphid\\Components.Aphid\\Components.Aphid.csproj
+		SccProjectName0 = $/Cypress/Aphid/Components.Aphid
+		SccAuxPath0 = https://autosectools.visualstudio.com/defaultcollection
+		SccLocalPath0 = ..\\Aphid\\Components.Aphid
+		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -19,6 +31,10 @@ Global
 		{97A18BC7-11F9-4C0A-9651-DB539EE08226}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97A18BC7-11F9-4C0A-9651-DB539EE08226}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97A18BC7-11F9-4C0A-9651-DB539EE08226}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4249DB75-BBB6-4CC4-B046-3170DD1D3BC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4249DB75-BBB6-4CC4-B046-3170DD1D3BC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4249DB75-BBB6-4CC4-B046-3170DD1D3BC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4249DB75-BBB6-4CC4-B046-3170DD1D3BC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

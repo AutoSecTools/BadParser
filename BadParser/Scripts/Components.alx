@@ -1,0 +1,43 @@
+﻿#'std';
+#'query';
+#'reflection';
+#'widgets';
+#'unitTests';
+using System;
+using System.IO;
+using System.Reflection;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Components.Aphid.Interpreter;
+using Components.Aphid.Library;
+using BadParser;
+
+print = Console.WriteLine;
+head = @{
+    hr();
+    print($_);
+    hr();
+};
+
+dump = @() $_ |> serialize |> print;
+hr = @() print('-' * 80);
+
+isSeq = @()
+    ValueHelper
+        .Unwrap($_)
+        .GetType()
+        .GetInterface("IEnumerable") != null;
+
+createBuffer = //Hack for creating byte array
+    @Array.CreateInstance(Convert.ToByte(0x0).GetType());
+
+loadExe = @() '.\\..\\bin\\Debug\\BadParser.exe' |> Path.GetFullPath |> Assembly.LoadFrom;
+
+init = @{
+    entry = Assembly.GetEntryAssembly().Location |> Path.GetFileName;
+
+    if (entry != "BadParser.exe") {
+        print('Loading exe');
+        loadExe();
+    }
+};

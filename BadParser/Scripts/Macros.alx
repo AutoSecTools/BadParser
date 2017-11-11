@@ -1,0 +1,2 @@
+﻿typeof = macro(@(x) { (new x()).GetType() });
+array = macro(@(type, len) { Array.CreateInstance(typeof(type), len) });

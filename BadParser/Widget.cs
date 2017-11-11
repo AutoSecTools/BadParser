@@ -18,11 +18,17 @@ namespace BadParser
 
         public override string ToString()
         {
+            var t = typeof(string);
+
             return string.Format(
                 "{0}, {{ {1} }}, Buffer Size={2}, Variant={3}",
                 Name,
-                Position,
-                Buffer.Length,
+                Position != null ?
+                    Position.ToString() :
+                    "[position null]",
+                Buffer != null ? 
+                    string.Format("{0:n0}", Buffer.Length) :
+                    "[buffer null]",
                 Variant);
         }
     }
