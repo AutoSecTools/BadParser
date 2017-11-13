@@ -4,7 +4,7 @@
 
 BadParser is a vulnerable parser designed to aid in the testing of fuzzers by simulating different kinds of memory corruption issues. Vulnerabilities are simulated by causing write-access violations at specific addresses, which serve as unique identifiers for the different issues.
 
-Currently BadParser only supports JSON input files, but other file formats are planned.
+Currently BadParser supports JSON and XML input files, with other file formats planned.
 
 The program simulates seven different vulnerabilities:
 
@@ -14,15 +14,15 @@ The program simulates seven different vulnerabilities:
 
 **0xdead0003** - widget.position.y integer underflow
 
-**0xdead0004** - widget.buffer buffer underflow
+**0xdead0004** - widget.buffer buffer overflow
 
 **0xdead0005** - widget.buffer uninitialized pointer
 
-**0xdead0006** - widget array buffer pointer
+**0xdead0006** - widget array buffer overflow pointer
 
 **0xdead0007** - widget.variant type confusion
 
-Test files for each issue can be found in the application directory e.g. test_0xdeadbeef1.json.
+Test files for each issue can be found in the application directory e.g. test_0xdead0001.json or test_0xdead0001.xml.
 
 ## Running BadParser
 
