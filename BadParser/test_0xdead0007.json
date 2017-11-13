@@ -3,7 +3,7 @@
 		"name": "Foo Widget",
 		"position": { "x": 10, "y": 20 },
 		"buffer": [ 10, 20, 30, 40 ],
-		"variant": [ 10, 20, 30, 40 ]
+		"variant": { "x": 100, "y": 55 }
 	},
 	{
 		"name": "Bar Widget",

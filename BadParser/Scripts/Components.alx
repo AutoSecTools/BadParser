@@ -10,7 +10,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Components.Aphid.Interpreter;
 using Components.Aphid.Library;
-using BadParser;
 
 print = Console.WriteLine;
 head = @{
@@ -30,14 +29,3 @@ isSeq = @()
 
 createBuffer = //Hack for creating byte array
     @Array.CreateInstance(Convert.ToByte(0x0).GetType());
-
-loadExe = @() '.\\..\\bin\\Debug\\BadParser.exe' |> Path.GetFullPath |> Assembly.LoadFrom;
-
-init = @{
-    entry = Assembly.GetEntryAssembly().Location |> Path.GetFileName;
-
-    if (entry != "BadParser.exe") {
-        print('Loading exe');
-        loadExe();
-    }
-};
