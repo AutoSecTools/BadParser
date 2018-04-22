@@ -35,17 +35,17 @@ _widgetType = macro(@{ (new Widget()).GetType().MakeArrayType()});
 var readWidget = {
     json: @() (new JavaScriptSerializer()).Deserialize($_ |> File.ReadAllText, _widgetType()),
     xml: @{
-        var s = $_ |> File.OpenRead;
-        var attrs = new XmlAttributes();
-        attrs.XmlElements.Add(new XmlElementAttribute("Int", Type.GetType("System.Int32")));
-        attrs.XmlElements.Add(new XmlElementAttribute("String", Type.GetType("System.String")));
-        attrs.XmlElements.Add(new XmlElementAttribute("Widget", createWidget().GetType()));
-        var overrides = new XmlAttributeOverrides();
-        overrides.Add(createWidget().GetType(), "Variant", attrs);
-        var xmlSerializer = new XmlSerializer(_widgetType(), overrides);
-        var x = xmlSerializer.Deserialize(s);
-        s.Dispose();
-        
-        ret x;
+        using (var s = $_ |> File.OpenRead) {
+            var attrs = new XmlAttributes();
+            attrs.XmlElements.Add(new XmlElementAttribute("Int", int));
+            attrs.XmlElements.Add(new XmlElementAttribute("String", string));
+            attrs.XmlElements.Add(new XmlElementAttribute("Widget", Widget));
+            var overrides = new XmlAttributeOverrides();
+            overrides.Add(Widget, "Variant", attrs);
+            var xmlSerializer = new XmlSerializer(_widgetType(), overrides);
+            var x = xmlSerializer.Deserialize(s);
+            
+            ret x;
+        }
     },
 }
