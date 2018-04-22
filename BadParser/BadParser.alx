@@ -1,0 +1,44 @@
+﻿#'Scripts\\VulnerabilitySimulation';
+
+head('BadParser 1.3');
+print();
+args = Environment.GetCommandLineArgs();
+argOffset = (args[0] |> Path.GetFileNameWithoutExtension).ToLower() == 'aphid' ? 1 : 0;
+fileOffset = 1 + argOffset;
+
+switch (args.Length - argOffset) {
+    1: {
+        print('Usage: BadParser [Input file]');
+        Environment.Exit(1);
+    }
+    2: if (!File.Exists(args[fileOffset])) {
+        print("Could not find input file '{0}'", args[fileOffset]);
+        Environment.Exit(2);
+    }
+    default: print('Default case for {0}', args.Length + argOffset);
+}
+
+file = args[fileOffset];
+print("Loading test file '{0}'", file);
+ext = file |> Path.GetExtension;
+
+widgets;
+read;
+
+switch (ext.ToLower()) {
+    ".json": read = readWidget.json;
+    ".xml": read = readWidget.xml;
+    default: {
+        print("Cannot deserialize file with unknown extension '{0}'", ext);
+        Environment.Exit(3);
+    }
+}
+
+widgets = file |> read;
+
+ext.Substring(1).ToUpper() |> @print('Deserializing {0}');
+
+print('{0} widgets loaded\r\n', widgets.Length);
+widgets for $_ |> dumpWidget @print('{0}');
+print();
+widgets |> runAllChecks;

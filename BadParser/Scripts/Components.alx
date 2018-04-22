@@ -1,6 +1,5 @@
 ﻿#'std';
 #'query';
-#'reflection';
 #'widgets';
 #'unitTests';
 using System;
@@ -11,14 +10,6 @@ using System.Runtime.InteropServices;
 using Components.Aphid.Interpreter;
 using Components.Aphid.Library;
 
-print = Console.WriteLine;
-head = @{
-    hr();
-    print($_);
-    hr();
-};
-
-dump = @() $_ |> serialize |> print;
 hr = @() print('-' * 80);
 
 isSeq = @()
