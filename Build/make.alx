@@ -1,0 +1,115 @@
+﻿#'std';
+using System.Diagnostics;
+
+head('Bad Barser Build Script');
+printQuery('Starting build process');
+
+var getAphidDir = @Path.Combine(getExe() |> Path.GetDirectoryName);
+
+var getDir = @Path.Combine(
+    this.{'$script'}
+        |> Path.GetDirectoryName
+        @() Path.Combine($_, '..')
+        |> Path.GetFullPath);
+
+var outDir = getDir('bin');
+
+if (!Directory.Exists(outDir)) {
+    printQuery('Creating ~Cyan~{0}~R~', outDir);
+    Directory.CreateDirectory(outDir);
+    printSuccess('Directory created');
+}
+
+var requireFile = @(s) {
+    if (!File.Exists(s)) {
+        fatal('Could not find ~Cyan~{0}~R~', s);
+    }
+};
+
+printInfo('Building to ~Cyan~{0}~R~', outDir);
+var mainScript = getDir('BadParser', 'BadParser.alx');
+requireFile(mainScript);
+printQuery('Making exe from ~Cyan~{0}~R~', mainScript);
+var makeExe = getAphidDir('Tools', 'MakeExe.alx');
+requireFile(makeExe);
+printSuccess('Make exe script found at ~Cyan~{0}~R~', makeExe);
+
+var si = new ProcessStartInfo(
+    getExe(),
+    '{0} {1} BadParser.exe' :: [ makeExe, mainScript ]);
+
+si.UseShellExecute = false;
+var p = Process.Start(si);
+p.WaitForExit();
+
+if (p.ExitCode != 0) {
+    fatal('MakeExe.alx failed with exit code ~Cyan~{0}~R~', p.ExitCode);
+}
+
+var exeSrc = getDir('Build', 'BadParser.exe');
+var exeDst = getDir('bin', 'BadParser.exe');
+requireFile(exeSrc);
+
+printInfo('Moving ~Cyan~{0}~R~ to ~Cyan~{0}~R~', exeSrc, exeDst);
+File.Copy(exeSrc, exeDst, true);
+File.Delete(exeSrc);
+
+var copySets = @(sets)
+    sets->@{
+        var src = $_[0];
+        var dst = $_[1];
+        printInfo('Copying ~Cyan~{0}~R~ to ~Cyan~{1}~R~', src, dst);
+        var dir = Path.GetDirectoryName(dst);
+
+        if (!Directory.Exists(dir)) {
+            printInfo('Creating directory ~Cyan~{0}~R~', dir);
+            Directory.CreateDirectory(dir);
+        }
+
+        File.Copy(src, dst, true);
+    };
+
+[
+    'Components.Aphid.dll',
+    'Components.Aphid.dll.config',
+    'Components.Aphid.pdb',
+    'Library\\Conversion.alx',
+    'Library\\List.alx',
+    'Library\\Meta.alx',
+    'Library\\Query.alx',
+    'Library\\Std.alx',
+    'Library\\String.alx',
+]
+->(@(f) [ getAphidDir(f), getDir('bin', f) ])
+|> copySets;
+
+[
+    'Scripts\\Components.alx',
+    'Scripts\\Macros.alx',
+    'Scripts\\UnitTests.alx',
+    'Scripts\\VulnerabilitySimulation.alx',
+    'Scripts\\Widgets.alx',
+    'test.json',
+    'test.xml',
+    'test_0xdead0001.json',
+    'test_0xdead0001.xml',
+    'test_0xdead0002.json',
+    'test_0xdead0002.xml',
+    'test_0xdead0003.json',
+    'test_0xdead0003.xml',
+    'test_0xdead0004.json',
+    'test_0xdead0004.xml',
+    'test_0xdead0005.json',
+    'test_0xdead0005.xml',
+    'test_0xdead0006.json',
+    'test_0xdead0006.xml',
+    'test_0xdead0007.json',
+    'test_0xdead0007.xml',
+]
+->(@(f) [ getDir('BadParser', f), getDir('bin', f) ])
+|> copySets;
+
+File.Copy(getDir('readme.MD'), getDir('bin', 'readme.MD'), true);
+File.Copy(getDir('BadParser', 'BadParser.alx'), getDir('bin', 'scripts', 'BadParser.alx'), true);
+
+printSuccess('done');

@@ -1,7 +1,10 @@
 ﻿#'..\\..\\Aphid\\Build\\package.base';
 
-f = @() string.Format('BadParser\\bin\\{{config}}\\{0}', $_);
-f2 = @() $args->f;
+var f = @() $_.Contains('\\') ?
+    [ string.Format('bin\\{0}', $_), $_ ] :
+    string.Format('bin\\{0}', $_);
+
+var f2 = @() $args->f;
 
 package({
     name: 'BadParser',
@@ -9,7 +12,21 @@ package({
     root: '..',
     mainModule: f('BadParser.exe'),
     files: f2(
-        'BadParser.pdb',
+        'Components.Aphid.dll',
+        'Components.Aphid.pdb',
+        'Components.Aphid.dll.config',
+        'Library\\Conversion.alx',
+        'Library\\List.alx',
+        'Library\\Meta.alx',
+        'Library\\Query.alx',
+        'Library\\Std.alx',
+        'Library\\String.alx',
+        'Scripts\\BadParser.alx',
+        'Scripts\\Components.alx',
+        'Scripts\\Macros.alx',
+        'Scripts\\UnitTests.alx',
+        'Scripts\\VulnerabilitySimulation.alx',
+        'Scripts\\Widgets.alx',
         'README.md',
         'test.json',
         'test_0xdead0001.json',
@@ -18,5 +35,13 @@ package({
         'test_0xdead0004.json',
         'test_0xdead0005.json',
         'test_0xdead0006.json',
-        'test_0xdead0007.json')
+        'test_0xdead0007.json',
+        'test.xml',
+        'test_0xdead0001.xml',
+        'test_0xdead0002.xml',
+        'test_0xdead0003.xml',
+        'test_0xdead0004.xml',
+        'test_0xdead0005.xml',
+        'test_0xdead0006.xml',
+        'test_0xdead0007.xml')
 });

@@ -1,6 +1,14 @@
-﻿#'Scripts\\VulnerabilitySimulation';
+﻿{
+    title: 'BadParser',
+    version: '1.6.042218',
+    company: 'AutoSec Tools LLC',
+    copyright: '© AutoSec Tools LLC 2018',
+};
 
-head('BadParser 1.3');
+#'Scripts\\VulnerabilitySimulation';
+
+var p = this.{'$block'}[0] |> evalNode;
+head('{0} {1}' :: [ p.title, p.version ]);
 print();
 
 var args = Environment.GetCommandLineArgs();
