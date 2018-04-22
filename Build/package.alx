@@ -12,6 +12,7 @@ package({
     root: '..',
     mainModule: f('BadParser.exe'),
     files: f2(
+        'BadParserx86.exe',
         'Components.Aphid.dll',
         'Components.Aphid.pdb',
         'Components.Aphid.dll.config',

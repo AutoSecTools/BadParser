@@ -112,4 +112,27 @@ var copySets = @(sets)
 File.Copy(getDir('readme.MD'), getDir('bin', 'readme.MD'), true);
 File.Copy(getDir('BadParser', 'BadParser.alx'), getDir('bin', 'scripts', 'BadParser.alx'), true);
 
+var corFlagsExe = "c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.6 Tools\\CorFlags.exe";
+
+if (File.Exists(corFlagsExe)) {
+    var dst = getDir('bin', 'BadParserx86.exe');
+    printInfo('Creating x86 exe ~Cyan~{0}~R~', dst);
+    File.Copy(getDir('bin', 'BadParser.exe'), dst, true);
+    printQuery('Running CorFlags');
+    var si = new ProcessStartInfo(corFlagsExe, '"{0}" /32BIT+' :: [ dst ]);
+    si.UseShellExecute = false;
+    var p = Process.Start(si);
+    p.WaitForExit();
+
+    if (p.ExitCode != 0) {
+        fatal('CorFlags.exe failed with exit code ~Cyan~{0}~R~', p.ExitCode);
+    }
+
+    printSuccess('Successfully creating x86 binary');
+} else {
+    printError(
+        'Could not find corflags executable at ~Yellow~{0}~R~, unable to create explicit x86 binary.',
+        corFlagsExe);
+}
+
 printSuccess('done');
