@@ -5,17 +5,11 @@ using System.Xml.Serialization;
 using System.Web.Script.Serialization;
 
 class of long WidgetVector { X, Y };
+class Widget { string Name, WidgetVector Position, byte set Buffer, Variant };
 
-class Widget {
-    string Name,
-    WidgetVector Position,
-    byte set Buffer,
-    Variant,
-};
+var dumpVector = @() String.Format('X={0}, Y={1}', $_.X, $_.Y);
 
-dumpVector = @() String.Format('X={0}, Y={1}', $_.X, $_.Y);
-
-dumpWidget = @() String.Format(
+var dumpWidget = @() String.Format(
     '{0}, {{ {1} }}, Buffer Size={2}, Variant={3}',
     [
         $_.Name,
@@ -24,8 +18,8 @@ dumpWidget = @() String.Format(
         $_.Variant != null ? $_.Variant : '[Variant null]'
     ]);
 
-createWidget = @{
-    w = new Widget();
+var createWidget = @{
+    var w = new Widget();
     w.Name = 'Test Widget';
     w.Position = new WidgetVector();
     w.Position.X = 52;
@@ -38,18 +32,18 @@ createWidget = @{
 
 _widgetType = macro(@{ (new Widget()).GetType().MakeArrayType()});
 
-readWidget = {
+var readWidget = {
     json: @() (new JavaScriptSerializer()).Deserialize($_ |> File.ReadAllText, _widgetType()),
     xml: @{
-        s = $_ |> File.OpenRead;
-        attrs = new XmlAttributes();
+        var s = $_ |> File.OpenRead;
+        var attrs = new XmlAttributes();
         attrs.XmlElements.Add(new XmlElementAttribute("Int", Type.GetType("System.Int32")));
         attrs.XmlElements.Add(new XmlElementAttribute("String", Type.GetType("System.String")));
         attrs.XmlElements.Add(new XmlElementAttribute("Widget", createWidget().GetType()));
-        overrides = new XmlAttributeOverrides();
+        var overrides = new XmlAttributeOverrides();
         overrides.Add(createWidget().GetType(), "Variant", attrs);
-        xmlSerializer = new XmlSerializer(_widgetType(), overrides);
-        x = xmlSerializer.Deserialize(s);
+        var xmlSerializer = new XmlSerializer(_widgetType(), overrides);
+        var x = xmlSerializer.Deserialize(s);
         s.Dispose();
         
         ret x;

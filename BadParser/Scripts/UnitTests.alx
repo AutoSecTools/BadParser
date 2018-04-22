@@ -1,22 +1,22 @@
 ﻿array = macro(@(type, len) { Array.CreateInstance(typeof(type), len) });
 typeof = macro(@(x) { (new x()).GetType() });
 
-testVuln = @(transformWidget) {
+var testVuln = @(transformWidget) {
     hr();
     print('Creating widget');
-    w = createWidget();
+    var w = createWidget();
     print('Transforming widget');
     w |> transformWidget;
     w |> runAllChecks;    
 };
 
-testVuln01 = @{ testVuln(@() $_.Name = 'foo' * 0x100) };
-testVuln02 = @{ testVuln(@() $_.Position.X = Int64.MaxValue) };
-testVuln03 = @{ testVuln(@() $_.Position.Y = -1) };
-testVuln04 = @{ testVuln(@() $_.Buffer = 0x300 |> createBuffer) };
-testVuln05 = @{ testVuln(@() $_.Buffer = null) };
+var testVuln01 = @{ testVuln(@() $_.Name = 'foo' * 0x100) };
+var testVuln02 = @{ testVuln(@() $_.Position.X = Int64.MaxValue) };
+var testVuln03 = @{ testVuln(@() $_.Position.Y = -1) };
+var testVuln04 = @{ testVuln(@() $_.Buffer = 0x300 |> createBuffer) };
+var testVuln05 = @{ testVuln(@() $_.Buffer = null) };
 
-testVuln06 = @{
+var testVuln06 = @{
     print('Creating array');
     a = array(Widget, 0x101);
     
@@ -27,5 +27,5 @@ testVuln06 = @{
     a |> runAllChecks;
 };
 
-testVuln07 = @{ testVuln(@() $_.Variant = array(Widget, 0x10)) };
+var testVuln07 = @{ testVuln(@() $_.Variant = array(Widget, 0x10)) };
 

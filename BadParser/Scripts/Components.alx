@@ -2,6 +2,7 @@
 #'query';
 #'widgets';
 #'unitTests';
+
 using System;
 using System.IO;
 using System.Reflection;
@@ -10,13 +11,13 @@ using System.Runtime.InteropServices;
 using Components.Aphid.Interpreter;
 using Components.Aphid.Library;
 
-hr = @() print('-' * 80);
+var hr = @() print('-' * 80);
 
-isSeq = @()
+var isSeq = @()
     ValueHelper
         .Unwrap($_)
         .GetType()
         .GetInterface("IEnumerable") != null;
 
-createBuffer = //Hack for creating byte array
+var createBuffer = //Hack for creating byte array
     @Array.CreateInstance(Convert.ToByte(0x0).GetType());

@@ -2,9 +2,10 @@
 
 head('BadParser 1.3');
 print();
-args = Environment.GetCommandLineArgs();
-argOffset = (args[0] |> Path.GetFileNameWithoutExtension).ToLower() == 'aphid' ? 1 : 0;
-fileOffset = 1 + argOffset;
+
+var args = Environment.GetCommandLineArgs();
+var argOffset = (args[0] |> Path.GetFileNameWithoutExtension).ToLower() == 'aphid' ? 1 : 0;
+var fileOffset = 1 + argOffset;
 
 switch (args.Length - argOffset) {
     1: {
@@ -18,12 +19,11 @@ switch (args.Length - argOffset) {
     default: print('Default case for {0}', args.Length + argOffset);
 }
 
-file = args[fileOffset];
+var file = args[fileOffset];
 print("Loading test file '{0}'", file);
-ext = file |> Path.GetExtension;
+var ext = file |> Path.GetExtension;
 
-widgets;
-read;
+var read;
 
 switch (ext.ToLower()) {
     ".json": read = readWidget.json;
@@ -34,10 +34,8 @@ switch (ext.ToLower()) {
     }
 }
 
-widgets = file |> read;
-
+var widgets = file |> read;
 ext.Substring(1).ToUpper() |> @print('Deserializing {0}');
-
 print('{0} widgets loaded\r\n', widgets.Length);
 widgets for $_ |> dumpWidget @print('{0}');
 print();
