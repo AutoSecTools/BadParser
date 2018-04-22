@@ -44,5 +44,7 @@ package({
         'test_0xdead0004.xml',
         'test_0xdead0005.xml',
         'test_0xdead0006.xml',
-        'test_0xdead0007.xml')
+        'test_0xdead0007.xml',
+        'src\\Aphid.zip',
+        'src\\BadParser.zip')
 });

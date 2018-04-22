@@ -135,4 +135,31 @@ if (File.Exists(corFlagsExe)) {
         corFlagsExe);
 }
 
+var downloadSource = @(url, dst) {
+    using System.Net;
+
+    printInfo('Downloading ~Cyan~{0}~R~ to ~Cyan~{1}~R~', url, dst);
+
+    using (var c = new WebClient()) {
+        c.DownloadFile(url, dst);
+    }
+
+    printSuccess('Download complete');
+};
+
+var srcDir = getDir('bin', 'src');
+
+if (!Directory.Exists(srcDir)) {
+    printInfo('Creating ~Cyan~{0}~R~', srcDir);
+    Directory.CreateDirectory(srcDir);
+}
+
+downloadSource(
+    'https://github.com/John-Leitch/Aphid/archive/master.zip',
+    getDir('bin', 'src', 'Aphid.zip'));
+
+downloadSource(
+    'https://github.com/AutoSecTools/BadParser/archive/master.zip',
+    getDir('bin', 'src', 'BadParser.zip'));
+
 printSuccess('done');
