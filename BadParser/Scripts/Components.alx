@@ -1,7 +1,7 @@
 ﻿#'std';
 #'meta';
-#'widgets';
-#'unitTests';
+#'scripts\\widgets';
+#'scripts\\unitTests';
 
 using System;
 using System.IO;
