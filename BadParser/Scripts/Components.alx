@@ -1,7 +1,6 @@
-﻿#'std';
-#'meta';
-#'scripts\\widgets';
-#'scripts\\unitTests';
+﻿#'Std';
+#'Scripts/Widgets';
+#'Scripts/UnitTests';
 
 using System;
 using System.IO;

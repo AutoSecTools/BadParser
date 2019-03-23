@@ -5,7 +5,7 @@
     copyright: '© AutoSec Tools LLC 2018',
 };
 
-#'Scripts\\VulnerabilitySimulation';
+#'Scripts/VulnerabilitySimulation';
 
 var p = this.{'$block'}[0] |> evalNode;
 head('{0} {1}' :: [ p.title, p.version ]);
@@ -37,7 +37,8 @@ switch (ext.ToLower()) {
     ".json": read = readWidget.json;
     ".xml": read = readWidget.xml;
     default: {
-        print("Cannot deserialize file with unknown extension '{0}'", ext);
+        'Cannot deserialize file with {0}' :: ext != '' ? 'unknown extension "~Yellow~{0}~R~"' :: ext : 'no file extension'
+        |> print;
         Environment.Exit(3);
     }
 }

@@ -4,6 +4,17 @@ using System.Diagnostics;
 head('Bad Barser Build Script');
 printQuery('Starting build process');
 
+var fail = @(exitCode, message) {
+    printCriticalError(message);
+
+    if (this.{'$debugger'} defined) {
+        Console.WriteLine('Press enter to continue...');
+        while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
+    }
+    
+    exitCode | exit;
+};
+
 var getAphidDir = @Path.Combine(getExe() |> Path.GetDirectoryName);
 
 var getDir = @Path.Combine(
@@ -22,37 +33,58 @@ if (!Directory.Exists(outDir)) {
 
 var requireFile = @(s) {
     if (!File.Exists(s)) {
-        fatal('Could not find ~Cyan~{0}~R~', s);
+        fail(0xbad01, 'Could not find ~Cyan~{0}~R~' :: s);
     }
 };
 
 printInfo('Building to ~Cyan~{0}~R~', outDir);
 var mainScript = getDir('BadParser', 'BadParser.alx');
 requireFile(mainScript);
-printQuery('Making exe from ~Cyan~{0}~R~', mainScript);
+
 var makeExe = getAphidDir('Tools', 'MakeExe.alx');
 requireFile(makeExe);
 printSuccess('Make exe script found at ~Cyan~{0}~R~', makeExe);
 
-var si = new ProcessStartInfo(
-    getExe(),
-    '{0} {1} BadParser.exe' :: [ makeExe, mainScript ]);
+['32', '64']->@(bitness) {
+    var aphidExe = getAphidDir('Aphid{0}.exe' :: bitness);
+    requireFile(aphidExe);
 
-si.UseShellExecute = false;
-var p = Process.Start(si);
-p.WaitForExit();
+    printQuery('Making {0}-bit exe from ~Cyan~{1}~R~', bitness, mainScript);
+    // var outExe = getDir('bin', 'BadParser{0}.exe' :: bitness);
+    var outExe = 'BadParser{0}.exe' :: bitness;
 
-if (p.ExitCode != 0) {
-    fatal('MakeExe.alx failed with exit code ~Cyan~{0}~R~', p.ExitCode);
-}
 
-var exeSrc = getDir('Build', 'BadParser.exe');
-var exeDst = getDir('bin', 'BadParser.exe');
-requireFile(exeSrc);
+    var si = new ProcessStartInfo(
+        aphidExe,
+        '"{0}" "{1}" "{2}"' :: [ makeExe, mainScript, outExe ]);
 
-printInfo('Moving ~Cyan~{0}~R~ to ~Cyan~{0}~R~', exeSrc, exeDst);
-File.Copy(exeSrc, exeDst, true);
-File.Delete(exeSrc);
+    si.WorkingDirectory = 'bin' | getDir;
+
+    printInfo(
+        'Launching MakeExe with command: ~Cyan~{0} {1}~R~',
+        si.FileName,
+        si.Arguments);
+
+    si.UseShellExecute = false;
+    var p = Process.Start(si);
+    p.WaitForExit();
+
+    if (p.ExitCode != 0) {
+        fail(
+            0xbad02,
+            'MakeExe.alx failed with exit code ~Cyan~{0}~R~' :: p.ExitCode);
+    }
+
+    // [ outExe, 'pdb' @Path.ChangeExtension(outExe) ]->@{
+    //     var outSrc = getDir('Build', $_);
+    //     var outDst = getDir('bin', $_);
+    //     requireFile(outSrc);
+
+    //     printInfo('Moving ~Cyan~{0}~R~ to ~Cyan~{0}~R~', outSrc, outDst);
+    //     File.Copy(outSrc, outDst, true);
+    //     File.Delete(outSrc);
+    // };
+};
 
 var copySets = @(sets)
     sets->@{
@@ -70,25 +102,6 @@ var copySets = @(sets)
     };
 
 [
-    'Components.Aphid.dll',
-    'Components.Aphid.dll.config',
-    'Components.Aphid.pdb',
-    'Library\\Conversion.alx',
-    'Library\\List.alx',
-    'Library\\Meta.alx',
-    'Library\\Query.alx',
-    'Library\\Std.alx',
-    'Library\\String.alx',
-]
-->(@(f) [ getAphidDir(f), getDir('bin', f) ])
-|> copySets;
-
-[
-    'Scripts\\Components.alx',
-    'Scripts\\Macros.alx',
-    'Scripts\\UnitTests.alx',
-    'Scripts\\VulnerabilitySimulation.alx',
-    'Scripts\\Widgets.alx',
     'test.json',
     'test.xml',
     'test_0xdead0001.json',
@@ -110,30 +123,32 @@ var copySets = @(sets)
 |> copySets;
 
 File.Copy(getDir('readme.MD'), getDir('bin', 'readme.MD'), true);
-File.Copy(getDir('BadParser', 'BadParser.alx'), getDir('bin', 'scripts', 'BadParser.alx'), true);
+//File.Copy(getDir('BadParser', 'BadParser.alx'), getDir('bin', 'scripts', 'BadParser.alx'), true);
 
-var corFlagsExe = "c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.6 Tools\\CorFlags.exe";
+// var corFlagsExe = "c:\\Program Files (x86)\\Microsoft SDKs\\Windows\\v10.0A\\bin\\NETFX 4.6 Tools\\CorFlags.exe";
 
-if (File.Exists(corFlagsExe)) {
-    var dst = getDir('bin', 'BadParserx86.exe');
-    printInfo('Creating x86 exe ~Cyan~{0}~R~', dst);
-    File.Copy(getDir('bin', 'BadParser.exe'), dst, true);
-    printQuery('Running CorFlags');
-    var si = new ProcessStartInfo(corFlagsExe, '"{0}" /32BIT+' :: [ dst ]);
-    si.UseShellExecute = false;
-    var p = Process.Start(si);
-    p.WaitForExit();
+// if (File.Exists(corFlagsExe)) {
+//     var dst = getDir('bin', 'BadParserx86.exe');
+//     printInfo('Creating x86 exe ~Cyan~{0}~R~', dst);
+//     File.Copy(getDir('bin', 'BadParser.exe'), dst, true);
+//     printQuery('Running CorFlags');
+//     var si = new ProcessStartInfo(corFlagsExe, '"{0}" /32BIT+' :: [ dst ]);
+//     si.UseShellExecute = false;
+//     var p = Process.Start(si);
+//     p.WaitForExit();
 
-    if (p.ExitCode != 0) {
-        fatal('CorFlags.exe failed with exit code ~Cyan~{0}~R~', p.ExitCode);
-    }
+//     if (p.ExitCode != 0) {
+//         fail(
+//             0xbad03,
+//             'CorFlags.exe failed with exit code ~Cyan~{0}~R~' :: p.ExitCode);
+//     }
 
-    printSuccess('Successfully creating x86 binary');
-} else {
-    printError(
-        'Could not find corflags executable at ~Yellow~{0}~R~, unable to create explicit x86 binary.',
-        corFlagsExe);
-}
+//     printSuccess('Successfully creating x86 binary');
+// } else {
+//     printError(
+//         'Could not find corflags executable at ~Yellow~{0}~R~, unable to create explicit x86 binary.',
+//         corFlagsExe);
+// }
 
 var downloadSource = @(url, dst) {
     using System.Net;
