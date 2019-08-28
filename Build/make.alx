@@ -4,28 +4,30 @@ using System.Diagnostics;
 head('Bad Barser Build Script');
 printQuery('Starting build process');
 
+_dbg = macro(@(stmt) {
+    if (this.{'$debugger'} defined) {
+        stmt();
+    }
+});
+
 var fail = @(exitCode, message) {
     printCriticalError(message);
 
-    if (this.{'$debugger'} defined) {
+    _dbg(@{
         Console.WriteLine('Press enter to continue...');
         while (Console.ReadKey(true).Key != ConsoleKey.Enter) { }
-    }
+    });
     
     exitCode | exit;
 };
 
-var getAphidDir = @Path.Combine(getExe() |> Path.GetDirectoryName);
+var getAphidDir = @io.join(io.app.dir());
+_dbg(@() getAphidDir = @io.join('c:\\tools\\aphid'));
 
-var getDir = @Path.Combine(
-    this.{'$script'}
-        |> Path.GetDirectoryName
-        @() Path.Combine($_, '..')
-        |> Path.GetFullPath);
-
+var getDir = @io.join(this.{'$script'} | io.up | io.up | io.full);
 var outDir = getDir('bin');
 
-if (!Directory.Exists(outDir)) {
+if (outDir | io.not.dir) {
     printQuery('Creating ~Cyan~{0}~R~', outDir);
     Directory.CreateDirectory(outDir);
     printSuccess('Directory created');
@@ -51,14 +53,13 @@ printSuccess('Make exe script found at ~Cyan~{0}~R~', makeExe);
 
     printQuery('Making {0}-bit exe from ~Cyan~{1}~R~', bitness, mainScript);
     // var outExe = getDir('bin', 'BadParser{0}.exe' :: bitness);
-    var outExe = 'BadParser{0}.exe' :: bitness;
-
+    var outExe = outDir @io.end('BadParser{0}.exe' :: bitness);
 
     var si = new ProcessStartInfo(
         aphidExe,
-        '"{0}" "{1}" "{2}"' :: [ makeExe, mainScript, outExe ]);
+        '"{0}" -medusa "{1}" "{2}"' :: [ makeExe, mainScript, outExe ]);
 
-    si.WorkingDirectory = 'bin' | getDir;
+    si.WorkingDirectory = mainScript | io.up | io.cd;
 
     printInfo(
         'Launching MakeExe with command: ~Cyan~{0} {1}~R~',

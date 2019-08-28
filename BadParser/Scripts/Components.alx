@@ -1,6 +1,6 @@
 ﻿#'Std';
-#'Scripts/Widgets';
-#'Scripts/UnitTests';
+#'Widgets';
+#'UnitTests';
 
 using System;
 using System.IO;

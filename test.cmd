@@ -16,5 +16,6 @@ for %%b in (32 64) do for /f %%i in ('dir test_0x* /oe /on /b') do (
     %dbg% -g -c "q" BadParser%%b.exe %%i >> %log%
 )
 ::? ['','`']-^<@(t) 0..8-^>@(n)format('{0}dead{1:X4}', t, n.int())
+::find /c ":dead0001=?" bin\out.log
 popd
 @echo on
